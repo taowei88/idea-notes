@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感笔记</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>灵感笔记</h1>
+            <button id="settingsBtn" class="icon-btn">⚙️</button>
+        </header>
+
+        <div class="quick-input">
+            <input type="text" id="quickInput" placeholder="闪现的想法，直接回车记录..." autofocus>
+            <select id="typeSelect">
+                <option value="idea">💡 闪念</option>
+                <option value="todo">📋 待办</option>
+            </select>
+        </div>
+
+        <main>
+            <div id="loading" class="loading">加载中...</div>
+            <ul id="recordList" class="record-list"></ul>
+        </main>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>设置</h2>
+            <div class="form-group">
+                <label for="apiKey">Notion API Key</label>
+                <input type="password" id="apiKey" placeholder="secret_...">
+                <a href="https://www.notion.so/my-integrations" target="_blank">获取 API Key</a>
+            </div>
+            <div class="form-group">
+                <label for="databaseId">Database ID</label>
+                <input type="text" id="databaseId" placeholder="32位数据库ID">
+            </div>
+            <div class="modal-actions">
+                <button id="saveSettings">保存</button>
+                <button id="closeSettings">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
