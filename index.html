@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>灵感笔记</title>
+    <title>灵感便签</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2d2d2d">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>灵感笔记</h1>
-            <button id="settingsBtn" class="icon-btn">⚙️</button>
-        </header>
+    <div class="sticky-container">
+        <div class="sticky-header">
+            <h1 class="sticky-title">灵感便签</h1>
+            <div class="header-actions">
+                <button id="pinBtn" class="icon-btn" title="窗口置顶">📌</button>
+                <button id="refreshBtn" class="icon-btn" title="刷新">🔄</button>
+                <button id="settingsBtn" class="icon-btn" title="设置">⚙️</button>
+            </div>
+        </div>
 
         <div class="quick-input">
-            <input type="text" id="quickInput" placeholder="闪现的想法，直接回车记录..." autofocus>
+            <input type="text" id="quickInput" placeholder="闪现的想法，直接回车..." autofocus>
             <select id="typeSelect">
-                <option value="idea">💡 闪念</option>
-                <option value="todo">📋 待办</option>
+                <option value="idea">💡</option>
+                <option value="todo">📋</option>
             </select>
         </div>
 
@@ -25,6 +31,10 @@
             <div id="loading" class="loading">加载中...</div>
             <ul id="recordList" class="record-list"></ul>
         </main>
+
+        <div class="sticky-footer">
+            <span id="recordCount">0 条记录</span>
+        </div>
     </div>
 
     <div id="settingsModal" class="modal">

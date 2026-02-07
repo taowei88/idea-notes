@@ -63,10 +63,17 @@ class App {
     constructor() {
         this.api = null;
         this.records = [];
+        this.initServiceWorker();
         this.initElements();
         this.bindEvents();
         this.loadSettings();
         this.checkConfig();
+    }
+
+    initServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(console.error);
+        }
     }
 
     initElements() {
@@ -75,11 +82,14 @@ class App {
         this.recordList = document.getElementById('recordList');
         this.loading = document.getElementById('loading');
         this.settingsBtn = document.getElementById('settingsBtn');
+        this.pinBtn = document.getElementById('pinBtn');
+        this.refreshBtn = document.getElementById('refreshBtn');
         this.settingsModal = document.getElementById('settingsModal');
         this.apiKeyInput = document.getElementById('apiKey');
         this.databaseIdInput = document.getElementById('databaseId');
         this.saveSettingsBtn = document.getElementById('saveSettings');
         this.closeSettingsBtn = document.getElementById('closeSettings');
+        this.recordCount = document.getElementById('recordCount');
     }
 
     bindEvents() {
@@ -90,11 +100,26 @@ class App {
         });
 
         this.settingsBtn.addEventListener('click', () => this.openSettings());
+        this.pinBtn.addEventListener('click', () => this.togglePin());
+        this.refreshBtn.addEventListener('click', () => this.loadRecords());
         this.saveSettingsBtn.addEventListener('click', () => this.saveSettings());
         this.closeSettingsBtn.addEventListener('click', () => this.closeSettings());
         this.settingsModal.addEventListener('click', (e) => {
             if (e.target === this.settingsModal) this.closeSettings();
         });
+    }
+
+    togglePin() {
+        this.pinBtn.classList.toggle('pinned');
+        if (window.alwaysOnTop) {
+            window.alwaysOnTop.set(false);
+        } else if (window.alwaysOnTop) {
+            window.alwaysOnTop.set(true);
+        }
+    }
+
+    updateRecordCount() {
+        this.recordCount.textContent = `${this.records.length} 条记录`;
     }
 
     loadSettings() {
@@ -152,6 +177,7 @@ class App {
     renderRecords() {
         this.recordList.innerHTML = this.records.map(record => this.renderRecord(record)).join('');
         this.bindRecordEvents();
+        this.updateRecordCount();
     }
 
     renderRecord(record) {
