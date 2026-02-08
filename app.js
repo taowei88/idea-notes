@@ -28,18 +28,16 @@ class NotionAPI {
         return this.request('/pages', {
             method: 'POST',
             body: JSON.stringify({
-                parent: { database_id: Config.databaseId },
+                parent: { data_source_id: Config.databaseId },
                 properties
             })
         });
     }
 
     async queryDatabase() {
-        return this.request(`/databases/${Config.databaseId}/query`, {
+        return this.request(`/data_sources/${Config.databaseId}/query`, {
             method: 'POST',
-            body: JSON.stringify({
-                sorts: [{ property: 'Created', direction: 'descending' }]
-            })
+            body: JSON.stringify({})
         });
     }
 
@@ -181,12 +179,12 @@ class App {
     }
 
     renderRecord(record) {
-        const title = record.properties.Title?.title[0]?.plain_text || '无内容';
-        const type = record.properties.Type?.select?.name || 'idea';
-        const status = record.properties.Status?.select?.name === '已完成';
+        const title = record.properties['标题']?.title[0]?.plain_text || '无内容';
+        const type = record.properties['选择']?.select?.name || '闪念';
+        const status = record.properties['状态']?.select?.name === '已完成';
         const id = record.id;
 
-        const typeIcon = type === 'todo' ? '📋' : '💡';
+        const typeIcon = type === '待办' ? '📋' : '💡';
         const statusIcon = status ? '✅' : '⬜';
 
         return `
@@ -228,10 +226,9 @@ class App {
 
         try {
             await this.api.createPage({
-                Title: { title: [{ text: { content } }] },
-                Type: { select: { name: type === 'todo' ? '待办' : '闪念' } },
-                Status: { select: { name: '进行中' } },
-                Created: { created_time: new Date().toISOString() }
+                '标题': { title: [{ text: { content } }] },
+                '选择': { select: { name: type === 'todo' ? '待办' : '闪念' } },
+                '状态': { select: { name: '进行中' } }
             });
 
             this.quickInput.value = '';
@@ -248,7 +245,7 @@ class App {
 
         try {
             await this.api.updatePage(id, {
-                Status: { select: { name: isCompleted ? '进行中' : '已完成' } }
+                '状态': { select: { name: isCompleted ? '进行中' : '已完成' } }
             });
             this.loadRecords();
         } catch (error) {
@@ -259,11 +256,11 @@ class App {
     async toggleType(item) {
         const id = item.dataset.id;
         const currentType = item.dataset.type;
-        const newType = currentType === 'todo' ? 'idea' : 'todo';
+        const newType = currentType === '待办' ? '闪念' : '待办';
 
         try {
             await this.api.updatePage(id, {
-                Type: { select: { name: newType === 'todo' ? '待办' : '闪念' } }
+                '选择': { select: { name: newType } }
             });
             this.loadRecords();
         } catch (error) {
