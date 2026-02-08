@@ -61,17 +61,10 @@ class App {
     constructor() {
         this.api = null;
         this.records = [];
-        this.initServiceWorker();
         this.initElements();
         this.bindEvents();
         this.loadSettings();
         this.checkConfig();
-    }
-
-    initServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(console.error);
-        }
     }
 
     initElements() {
